@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 This file is part of The RetroPie Project
 The RetroPie Project is the legal property of its developers, whose names are
@@ -212,7 +213,7 @@ class OSK:
     Main class for the on-screen keyboard application
     """
 
-    def __init__(self, title, input_title, input_value, min_chars=8, dim=False):
+    def __init__(self, title, input_title, input_value, min_chars=0, dim=False):
         """
         :param title: the string used in the application heading
         :param input_title: the name of the input string being captured (e.g. Password)
@@ -535,6 +536,7 @@ class OSK:
         Keyboard input handling
         """
         # handle the normal key press
+
         if len(key) == 1 and ord(key) in range(32, 127):
             txt = self.input.get_text()[0].rstrip(ASCII_BLOCK)
             self.input.set_text([('input text', txt + key), ('prompt', ASCII_BLOCK)])
@@ -591,7 +593,10 @@ class OSK:
         When the OK/Cancel buttons are used, 'ViewExit' will be raised,
         otherwise assume the user has used 'Esc' to close the dialog
         """
-        self.loop = urwid.MainLoop(self.frame, PALETTE, unhandled_input=self.unhandled_key)
+
+        tty_in = open('/dev/tty1', 'r')
+        screen = urwid.raw_display.Screen(input=tty_in)
+        self.loop = urwid.MainLoop(self.frame, PALETTE, screen=screen, unhandled_input=self.unhandled_key)
         try:
             self.loop.run()
             return self.on_exit(1)
@@ -602,23 +607,26 @@ class OSK:
 def parse_arguments(args):
     parser = ArgumentParser(description="Reads a string using an On Screen Keyboard")
 
-    parser.add_argument('--backtitle', type=str, help='Window title', required=True)
+    parser.add_argument('--backtitle', type=str, help='Window title', required=False)
     parser.add_argument('--inputbox', type=str, help='Name of the string being captured', required=True)
     parser.add_argument(
         '--minchars', type=int, nargs='?',
         help='Minimum number of characters needed (default: %(default)s)',
-        default=8)
+        default=0)
     parser.add_argument('input', type=str, help='Input value', default='', nargs='?')
     args = parser.parse_args()
+    if not args.backtitle:
+	    args.backtitle = "ArkOS"
     return args.backtitle, args.inputbox, args.minchars, args.input
 
 
 def main():
     backtitle, inputbox, minchars, value = parse_arguments(sys.argv)
     # get the terminal size to detect small display
-    cols, rows = get_terminal_size(0)
+    cols, rows = get_terminal_size(1)
 
-    osk = OSK(backtitle, inputbox, value, minchars, (cols < SMALL_SCREEN_COLS or rows < SMALL_SCREEN_ROWS))
+    #osk = OSK(backtitle, inputbox, value, minchars)
+    osk = OSK(backtitle, inputbox, value, minchars,  (cols < SMALL_SCREEN_COLS or rows < SMALL_SCREEN_ROWS))
     exitcode, exitstring = osk.main()
 
     # print the input text when returned by the application
