@@ -607,16 +607,17 @@ class OSK:
 def parse_arguments(args):
     parser = ArgumentParser(description="Reads a string using an On Screen Keyboard")
 
-    parser.add_argument('--backtitle', type=str, help='Window title', required=False)
-    parser.add_argument('--inputbox', type=str, help='Name of the string being captured', required=True)
+    parser.add_argument('--backtitle', type=str, help='Window title', default="ArkOS", required=False)
+    parser.add_argument('--inputbox', type=str, help='Name of the string being captured', required=False)
     parser.add_argument(
         '--minchars', type=int, nargs='?',
         help='Minimum number of characters needed (default: %(default)s)',
         default=0)
     parser.add_argument('input', type=str, help='Input value', default='', nargs='?')
     args = parser.parse_args()
-    if not args.backtitle:
-	    args.backtitle = "ArkOS"
+    if not args.inputbox:
+        args.inputbox = args.input
+        args.input = ''
     return args.backtitle, args.inputbox, args.minchars, args.input
 
 
