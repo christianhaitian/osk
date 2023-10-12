@@ -3,8 +3,8 @@ Originally from the Retropie Project: https://github.com/RetroPie/RetroPie-Setup
 
 ## To install and use this
 
-Requirements:
-Python 3.7 or newer
+Requirements: \
+Python 3.5 or newer \
 Python3 urwid module
 
 In ArkOS, Python 3.7 is already included.  To install the urwid module, do `sudo apt -y update && sudo apt -y -t eoan install python3-urwid`
