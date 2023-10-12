@@ -15,7 +15,7 @@ To run this so it outputs on a builtin screen, you need to add `2>&1 > /dev/tty1
 
 To use this directly on your device, you will need a keyboard emulator such as [gptokeyb](https://github.com/christianhaitian/gptokeyb) or [oga_controls](https://github.com/christianhaitian/oga_controls).  gptokeyb is recommended as it is more up-to-date.
 
-commandline switch options:
---backtitle "Backtitle" (Change the background title to some other text.  Default is ArkOS)
---inputbox "inputbox" (Add a title to the input box itself.  This switch is not needed as it's assumed the text added after the osk.py executable is the title of the inputbox)
+commandline switch options: \
+--backtitle "Backtitle" (Change the background title to some other text.  Default is ArkOS) \
+--inputbox "inputbox" (Add a title to the input box itself.  This switch is not needed as it's assumed the text added after the osk.py executable is the title of the inputbox) \
 --minchars "number" (Require the user to enter a minimum number of characters before accepting the input)
